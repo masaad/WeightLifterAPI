@@ -1,10 +1,15 @@
 
 import { ObjectID } from 'mongodb';
+import * as jwt from 'jsonwebtoken';
+import * as config from '../config';
+import { verifyToken } from '../auth/VerifyToken';
 
-export const setGetAllAthleteRoute = (app, db) => {
-    app.get('/athletes', (req, res) => {
-        res.send('hello');
-    })
+
+
+export const setGetAllAthleteRoute = (app, db) => {    
+    app.get('/athletes', verifyToken, (req, res) => {
+        res.send('verified');  
+    });
 };
 
 export const setGetAthleteByIdRoute = (app, db) => {
@@ -17,7 +22,7 @@ export const setGetAthleteByIdRoute = (app, db) => {
                 res.send(item); 
             }
         })        
-    })
+    });
 };
 
 export const setGetAthleteByNameRoute = (app, db) => {
@@ -48,7 +53,7 @@ export const setPostAthleteRoute = (app, db) => {
                 res.send(result.ops[0]._id);
             }
         });       
-    })
+    });
 };
 
 export const setUpdateAthleteRoute = (app, db) => {
@@ -59,11 +64,8 @@ export const setUpdateAthleteRoute = (app, db) => {
             } else {                 
                 res.send(item)
             };
-        });
-        
-        
-          
-    })
+        });                          
+    });
 };
 
 export const setDeleteAthleteRoute = (app, db) => {
@@ -76,5 +78,6 @@ export const setDeleteAthleteRoute = (app, db) => {
                 res.send('Athlete ' + req.params.id + ' deleted!'); 
             }
         });
-    })
+    });
 }
+
