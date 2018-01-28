@@ -35,7 +35,7 @@ router.get('/find/:name', verifyToken, (req, res) => {
         db.collection(dbStrings.tables.athletes).find(filter).toArray((err, items) => {
             if (err){
                 res.send({ "error": "Error: " + err});
-            } else {
+            } else {                                           
                 res.send(items);
             }
         });        
@@ -43,6 +43,8 @@ router.get('/find/:name', verifyToken, (req, res) => {
 })
 
 router.post('/', verifyToken, (req, res) => { 
+    if (res.role !== 'Admin') 
+        res.status(401).send({ message: 'your are not authorized to add an athlete.'});   
     const newAthlete  = {
         firstName: req.body.firstName, 
         lastName: req.body.lastName, 
@@ -63,6 +65,8 @@ router.post('/', verifyToken, (req, res) => {
 });
 
 router.post('/update/:id', verifyToken, (req, res) => {  
+    if (res.role !== 'Admin') 
+        res.status(401).send({ message: 'your are not authorized to update an athlete.'});
     MongoClient.connect(dbStrings.dbUrl, (err, database) => {    
         if (err) throw `Failed to connect to database. Error: ${err}`;
         const db = database.db(dbStrings.dbName);           
@@ -77,6 +81,8 @@ router.post('/update/:id', verifyToken, (req, res) => {
 });
 
 router.delete('/delete/:id', verifyToken, (req, res) => {
+    if (res.role !== 'Admin') 
+        res.status(401).send({ message: 'your are not authorized to perfom this action.'});
     const details = { '_id' : new ObjectID(req.params.id) }; 
     MongoClient.connect(dbStrings.dbUrl, (err, database) => {    
         if (err) throw `Failed to connect to database. Error: ${err}`;

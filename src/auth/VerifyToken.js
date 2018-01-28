@@ -15,6 +15,7 @@ export const verifyToken = (req, res, next) => {
                 auth: false, 
                 message: 'Failed to authenticate token.'
             });
+        res.role = decode.role;
         next(); 
     }); 
 }

@@ -9,14 +9,13 @@ import { MongoClient } from 'mongodb';
 
 let router = express.Router(); 
 
-router.post('/register', verifyToken, (req, res) => {
+router.post('/register', (req, res) => {
     const hashedPassword = bcryptjs.hashSync(req.body.password, 8);
     const newUser = {
         firstName: req.body.firstName,
         lastName: req.body.lastName, 
         role: req.body.role,
         email: req.body.email, 
-        password: hashedPassword,           
     };
     
     MongoClient.connect(dbUrl, (err, database) => {    
@@ -51,7 +50,8 @@ router.post('/login', (req, res) => {
                 });
             
             const token = jwt.sign({
-                id: user._id
+                id: user._id, 
+                role: user.role,
             }, key, {
                 expiresIn: 86400
             }); 
@@ -64,5 +64,6 @@ router.post('/login', (req, res) => {
         });
     });               
 });
+
 
 export default router;  
