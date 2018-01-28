@@ -4,9 +4,9 @@ const bodyParser = require('body-parser');
 const url = require('url');
 const helmet = require('helmet');
 
-import { setRoutes }  from '../routes'
 import { portNo }  from '../config';
-import router from '../auth/AuthController'
+import authController from '../auth/AuthController';
+import * as controllers from '../controllers'
 
 const app = express(); 
 //const auth = new authController(); 
@@ -14,7 +14,8 @@ const app = express();
 app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use('/api/auth', router);
+app.use('/api/auth', authController);
+app.use('/api/athletes', controllers.athleteController);
 
 
 app.listen(portNo, () => {
